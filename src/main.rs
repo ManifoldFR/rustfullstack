@@ -1,38 +1,49 @@
+extern crate serde;
 #[macro_use]
-extern crate tower_web;
-extern crate tokio;
+extern crate serde_derive;
+#[macro_use]
+extern crate diesel;
+extern crate dotenv;
+extern crate chrono;
+extern crate warp;
+extern crate pretty_env_logger;
 
-use tower_web::ServiceBuilder;
-use tokio::prelude::*;
+pub mod schema;
+pub mod models;
 
-/// This type will be part of the web service as a resource.
-#[derive(Clone, Debug)]
-struct HelloWorld;
+use diesel::prelude::*;
+use diesel::pg::PgConnection;
+use dotenv::dotenv;
+use std::env;
+use warp::Filter;
+use std::net::SocketAddrV4;
 
-/// This will be the JSON response
-#[derive(Response)]
-struct HelloResponse {
-    message: &'static str,
+pub fn establish_connection() -> PgConnection {
+    let db_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set.");
+    PgConnection::establish(&db_url)
+        .expect(&format!("Error connecting to {}", db_url))
 }
 
-impl_web! {
-    impl HelloWorld {
-        #[get("/")]
-        #[content_type("json")]
-        fn hello_world(&self) -> Result<HelloResponse, ()> {
-            Ok(HelloResponse {
-                message: "hello world",
-            })
-        }
-    }
+#[derive(Serialize)]
+struct TestStruct {
+    username: String
 }
 
-pub fn main() {
-    let addr = "127.0.0.1:8080".parse().expect("Invalid address");
-    println!("Listening on http://{}", addr);
 
-    ServiceBuilder::new()
-        .resource(HelloWorld)
-        .run(&addr)
-        .unwrap();
+fn main() {
+    dotenv().ok();
+    pretty_env_logger::init();
+
+    let addr: SocketAddrV4 = "127.0.0.1:3030".parse()
+        .expect("Could not create IP.");
+
+    let hello = warp::path("people")
+        .and(warp::path::param::<String>())
+        .map(|username| {
+            warp::reply::json(&TestStruct {username})
+        });
+
+    let server = warp::serve(hello);
+    server.run(addr);
 }
