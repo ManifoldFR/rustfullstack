@@ -1,0 +1,21 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^2.2.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.5.0",
+    "parcel-bundler": "^1.9.7",
+    "parcel-plugin-vue": "^1.5.0"
+  }
+}

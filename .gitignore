@@ -1,3 +1,5 @@
 /target
 **/*.rs.bk
 .env
+
+app/node_modules

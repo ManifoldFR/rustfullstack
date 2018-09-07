@@ -9,3 +9,7 @@ You need to setup the following environment variables inside of a `.env` file:
 ```
 DATABASE_URL
 ```
+
+## Frontend
+
+The frontend was built using [VueJS](https://vuejs.org) and [Parcel](https://parceljs.org) following [this tutorial](https://alligator.io/vuejs/vue-parceljs/).
