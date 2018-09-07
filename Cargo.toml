@@ -1,0 +1,9 @@
+[package]
+name = "fullstack-rust-site"
+version = "0.1.0"
+authors = ["ManifoldFR <wilson.jallet@gmail.com>"]
+
+[dependencies]
+tower-web = "0.2.2"
+tokio = "0.1.8"
+serde = "1.0.77"
