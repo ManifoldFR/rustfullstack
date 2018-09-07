@@ -28,23 +28,42 @@ fn main() {
     dotenv().ok();
     pretty_env_logger::init();
 
-    let conn = establish_connection();
+    let log = warp::log("info");
 
     let addr: SocketAddrV4 = "127.0.0.1:3030".parse()
         .expect("Could not create IP.");
 
-    let hello = warp::path("people")
+    let greet = warp::path("people")
         .and(warp::path::param::<String>())
         .map(|username| {
-            warp::reply::reply()
+            format!("{} says hello!", username)
         });
 
     let users = warp::path("users")
-        .map(|| {
-            let res = models::User::get_list(&conn);
-            warp::reply::json(&res)
-        });
+        .and(
+            warp::get2()
+            .map(|| {
+                let conn = establish_connection();
+                let res = models::User::get_list(&conn);
+                warp::reply::json(&res)
+            })
+        )
+        .or(
+            warp::post2()
+            .and(warp::body::json())
+            .map(|new_user: models::NewUser| {
+                println!("Adding user {:?}", new_user);
+                let conn = establish_connection();
+                let res = models::User::create(&conn, new_user);
+                warp::reply::json(&res)
+            })
+        );
 
-    let server = warp::serve(hello);
+    let routes = warp::any()
+        .and(greet)
+        .or(users)
+        .with(log);
+
+    let server = warp::serve(routes);
     server.run(addr);
 }
