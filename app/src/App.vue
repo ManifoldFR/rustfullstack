@@ -17,6 +17,6 @@ export default {
 
 <style lang="css">
   #app {
-    color: #56b983;
+    color: #362d8b;
   }
 </style>
