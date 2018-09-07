@@ -1,10 +1,21 @@
 use schema::users;
 use diesel::prelude::*;
-use chrono::{DateTime,Local};
+use chrono::NaiveDateTime;
 
-#[derive(Queryable, Deserialize, Serialize)]
+#[derive(Clone, Queryable, Serialize, Identifiable)]
 pub struct User {
-    pub id: u32,
+    pub id: i32,
     pub username: String,
-    pub created_at: DateTime<Local>
+    pub created_at: NaiveDateTime
 }
+
+impl User {
+    pub fn get_list(conn: &PgConnection) -> Vec<User> {
+        use schema::users::dsl::*;
+
+        let results = users.load::<User>(conn)
+            .expect("Error loading posts");
+        results
+    }
+}
+

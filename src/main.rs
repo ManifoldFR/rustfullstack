@@ -1,8 +1,6 @@
 extern crate serde;
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate diesel;
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate diesel;
 extern crate dotenv;
 extern crate chrono;
 extern crate warp;
@@ -25,15 +23,12 @@ pub fn establish_connection() -> PgConnection {
         .expect(&format!("Error connecting to {}", db_url))
 }
 
-#[derive(Serialize)]
-struct TestStruct {
-    username: String
-}
-
 
 fn main() {
     dotenv().ok();
     pretty_env_logger::init();
+
+    let conn = establish_connection();
 
     let addr: SocketAddrV4 = "127.0.0.1:3030".parse()
         .expect("Could not create IP.");
@@ -41,7 +36,13 @@ fn main() {
     let hello = warp::path("people")
         .and(warp::path::param::<String>())
         .map(|username| {
-            warp::reply::json(&TestStruct {username})
+            warp::reply::reply()
+        });
+
+    let users = warp::path("users")
+        .map(|| {
+            let res = models::User::get_list(&conn);
+            warp::reply::json(&res)
         });
 
     let server = warp::serve(hello);
