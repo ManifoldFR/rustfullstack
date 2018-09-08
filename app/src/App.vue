@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 const API_ENDPOINT = "http://127.0.0.1:3030"
 
 export default {
@@ -42,9 +43,9 @@ export default {
     }
   },
   mounted() {
-    const users = fetch(`${API_ENDPOINT}/users`)
+    const users = axios.get(`${API_ENDPOINT}/users`)
       .then(response => {
-        return response.json()
+        return response.data
       }).then(myJson => {
         this.users = myJson
       })

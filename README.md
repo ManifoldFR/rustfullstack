@@ -20,28 +20,34 @@ You'll need a PostgreSQL database running and accessible on your network, as wel
 sudo apt install postgresql libpq-dev ## or postgresql-10
 ```
 
-The Diesel CLI is required, install it with:
+The Diesel CLI (just the PostgreSQL features) is required, install it with:
 
 ```bash
-cargo install diesel_cli
+cargo install diesel_cli --no-default-features --features postgres  
 ```
 
 ### .env file
 
 You need to setup the following environment variables inside of a `.env` file:
 
-```
+```env
 DATABASE_URL
 ```
 
 ## Frontend
 
-The frontend was built using [VueJS](https://vuejs.org) and [Parcel](https://parceljs.org) following [this tutorial](https://alligator.io/vuejs/vue-parceljs/). We consume the Rust API using `fetch`.
+```bash
+cd app/
+```
+
+The frontend was built using [VueJS](https://vuejs.org) and [Parcel](https://parceljs.org) following [this tutorial](https://alligator.io/vuejs/vue-parceljs/). We consume the Rust API using `axios`.
 
 Install the dependencies:
 
-    npm i
-
+```bash
+npm i -g parcel-bundler ## to get the parcel CLI
+npm i
+```
 
 Launch the development server with hot module reloading:
 
