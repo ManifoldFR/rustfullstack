@@ -33,13 +33,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import client, { API_ENDPOINT } from './utils/client'
 import Register from './components/Register'
-const API_ENDPOINT = "http://127.0.0.1:3030"
-
-const client = axios.create({
-  baseURL: API_ENDPOINT,
-})
 
 
 export default {

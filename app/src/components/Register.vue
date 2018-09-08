@@ -15,15 +15,7 @@
 
 <script>
 import axios from 'axios'
-const API_ENDPOINT = "http://127.0.0.1:3030"
-
-const client = axios.create({
-    baseURL: API_ENDPOINT,
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-    },
-})
+import client, { API_ENDPOINT } from '../utils/client'
 
 export default {
     data() {
