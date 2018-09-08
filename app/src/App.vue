@@ -20,7 +20,7 @@
               {{ u.username }}
             </td>
             <td>
-              {{ u.created_at }}
+              {{ u.created_at.toString() }}
             </td>
           </tr>
         </tbody>
@@ -41,6 +41,7 @@ const client = axios.create({
   baseURL: API_ENDPOINT,
 })
 
+
 export default {
   name: 'app',
   data() {
@@ -58,6 +59,9 @@ export default {
       .then(response => {
         return response.data
       }).then(myJson => {
+        myJson.map(u => {
+          u.created_at = new Date(u.created_at)
+        })
         this.users = myJson
       }).catch(err => {
         console.log(err)
@@ -70,10 +74,24 @@ export default {
   h1 {
     color: #362d8b;
   }
+
   * {
     font-family: 'Roboto', sans-serif;
   }
+
   body {
     padding: 1em 4em;
+  }
+
+  table {
+    border: solid thin;
+    border-radius: 0.5rem;
+    border-collapse: collapse;
+  }
+
+  td, th {
+    border: 1px solid #999;
+    padding: 0.5rem;
+    text-align: left;
   }
 </style>
