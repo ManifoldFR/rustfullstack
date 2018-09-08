@@ -12,4 +12,13 @@ DATABASE_URL
 
 ## Frontend
 
-The frontend was built using [VueJS](https://vuejs.org) and [Parcel](https://parceljs.org) following [this tutorial](https://alligator.io/vuejs/vue-parceljs/).
+The frontend was built using [VueJS](https://vuejs.org) and [Parcel](https://parceljs.org) following [this tutorial](https://alligator.io/vuejs/vue-parceljs/). We consume the Rust API using `fetch`.
+
+Install the dependencies:
+
+    npm i
+
+
+Launch the development server with hot module reloading:
+
+    parcel index.html
