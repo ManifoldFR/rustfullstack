@@ -1,22 +1,57 @@
 <template>
   <div id="app">
-    <h1>{{ msg }}</h1>
+    <h1>{{ title }}</h1>
+    <p>
+      {{ msg }}
+    </p>
+
+    <div>
+      <h2>Currently registered users:</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Registered</th>
+          </tr>
+        </thead>
+        <tbody v-for="u in users" v-bind:key="u.id">
+          <tr>
+            <td>
+              {{ u.username }}
+            </td>
+            <td>
+              {{ u.created_at }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'app',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App!'
+      title: 'Welcome to Vue.js!',
+      msg: 'Compiled with ParcelJS',
+      users: null
     }
+  },
+  mounted() {
+    const users = fetch("http://127.0.0.1:3030/users")
+      .then(response => {
+        return response.json()
+      }).then(myJson => {
+        this.users = myJson
+      })
   }
 }
 </script>
 
 <style lang="css">
-  #app {
+  h1 {
     color: #362d8b;
   }
 </style>

@@ -1,6 +1,7 @@
 extern crate serde;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate diesel;
+#[macro_use] extern crate log;
 extern crate dotenv;
 extern crate chrono;
 extern crate warp;
@@ -47,12 +48,11 @@ fn main() {
                 let res = models::User::get_list(&conn);
                 warp::reply::json(&res)
             })
-        )
-        .or(
+        ).or(
             warp::post2()
             .and(warp::body::json())
             .map(|new_user: models::NewUser| {
-                println!("Adding user {:?}", new_user);
+                info!("Adding user {:?}", new_user);
                 let conn = establish_connection();
                 let res = models::User::create(&conn, new_user);
                 warp::reply::json(&res)
@@ -62,7 +62,8 @@ fn main() {
     let routes = warp::any()
         .and(greet)
         .or(users)
-        .with(log);
+        .with(log)
+        .with(warp::reply::with::header("Access-Control-Allow-Origin", "*"));
 
     let server = warp::serve(routes);
     server.run(addr);
