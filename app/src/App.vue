@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <h1>{{ title }}</h1>
     <p>
       {{ msg }}
@@ -26,12 +26,20 @@
         </tbody>
       </table>
     </div>
+
+    <app-register></app-register>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Register from './components/Register'
 const API_ENDPOINT = "http://127.0.0.1:3030"
+
+const client = axios.create({
+  baseURL: API_ENDPOINT,
+})
 
 export default {
   name: 'app',
@@ -42,12 +50,17 @@ export default {
       users: null
     }
   },
-  mounted() {
-    const users = axios.get(`${API_ENDPOINT}/users`)
+  components: {
+    'app-register': Register
+  },
+  created() {
+    const users = client.get('/users')
       .then(response => {
         return response.data
       }).then(myJson => {
         this.users = myJson
+      }).catch(err => {
+        console.log(err)
       })
   }
 }
@@ -59,5 +72,8 @@ export default {
   }
   * {
     font-family: 'Roboto', sans-serif;
+  }
+  body {
+    padding: 1em 4em;
   }
 </style>

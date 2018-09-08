@@ -63,7 +63,12 @@ fn main() {
         .and(greet)
         .or(users)
         .with(log)
-        .with(warp::reply::with::header("Access-Control-Allow-Origin", "*"));
+        .with(warp::reply::with::header(
+            "Access-Control-Allow-Headers", "Content-Type, Accept"))
+        .with(warp::reply::with::header(
+            "Access-Control-Allow-Credentials", "true"))
+        .with(warp::reply::with::header(
+            "Access-Control-Allow-Origin", "*"));
 
     let server = warp::serve(routes);
     server.run(addr);
