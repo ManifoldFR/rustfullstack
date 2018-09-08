@@ -30,17 +30,19 @@
 </template>
 
 <script>
+const API_ENDPOINT = "http://127.0.0.1:3030"
+
 export default {
   name: 'app',
   data() {
     return {
       title: 'Welcome to Vue.js!',
-      msg: 'Compiled with ParcelJS',
+      msg: `Serving Rust (warp) API at ${API_ENDPOINT}`,
       users: null
     }
   },
   mounted() {
-    const users = fetch("http://127.0.0.1:3030/users")
+    const users = fetch(`${API_ENDPOINT}/users`)
       .then(response => {
         return response.json()
       }).then(myJson => {
@@ -53,5 +55,8 @@ export default {
 <style lang="css">
   h1 {
     color: #362d8b;
+  }
+  * {
+    font-family: 'Roboto', sans-serif;
   }
 </style>
