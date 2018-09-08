@@ -15,6 +15,7 @@ use diesel::pg::PgConnection;
 use dotenv::dotenv;
 use std::env;
 use warp::Filter;
+use warp::http;
 use std::net::SocketAddrV4;
 
 pub fn establish_connection() -> PgConnection {
@@ -59,16 +60,28 @@ fn main() {
             })
         );
 
+    let options = warp::options()
+        .and(warp::header::<String>("origin")).map(|origin| {
+            Ok(http::Response::builder()
+                .header("access-control-allow-methods", "HEAD, GET")
+                .header("access-control-allow-headers", "authorization")
+                .header("access-control-allow-credentials", "true")
+                .header("access-control-max-age", "300")
+                .header("access-control-allow-origin", origin)
+                .header("vary", "origin")
+                .body(""))
+    });
+
     let routes = warp::any()
-        .and(greet)
+        .and(options)
+        .or(greet)
         .or(users)
-        .with(log)
         .with(warp::reply::with::header(
             "Access-Control-Allow-Headers", "Content-Type, Accept"))
         .with(warp::reply::with::header(
-            "Access-Control-Allow-Credentials", "true"))
-        .with(warp::reply::with::header(
-            "Access-Control-Allow-Origin", "*"));
+            "Access-Control-Allow-Origin", "*"))
+        .with(log)
+            ;
 
     let server = warp::serve(routes);
     server.run(addr);

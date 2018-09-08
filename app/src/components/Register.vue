@@ -19,7 +19,10 @@ const API_ENDPOINT = "http://127.0.0.1:3030"
 
 const client = axios.create({
     baseURL: API_ENDPOINT,
-    withCredentials: false
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
 })
 
 export default {
@@ -32,14 +35,14 @@ export default {
     },
     methods: {
         onSubmit() {
+            const send_data = JSON.stringify(this.store)
+            console.log(send_data)
             let add_user = client.post(
-                '/users',
-                this.store
+                `/users`, send_data
             ).then(response => {
-                console.log(response.statusText)
-                console.log(response.headers)
-                console.log(response.config)
-                console.log(response.data)
+                console.log(response)
+            }).catch(error => {
+                console.log(error)
             })
         }
     }
